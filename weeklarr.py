@@ -38,14 +38,18 @@ def send_movies(movies):
     dw_movies = []
     for movie in ok_movies:
         time.sleep(1)
-        search = radarr.search_movies(movie)[0]
-        if search is not None:
+        try:
+            search = radarr.search_movies(movie)[0]
+        except arrapi.exceptions.NotFound:
+            print("Not found : ", movie)
+
+        else:
             print("Found : ", movie)
             dw_movies.append(search)
 
     # Add each movie to the download queue
     for movie in dw_movies:
-        time.sleep(2)
+        time.sleep(30)
         try:
             movie.add("/films-series/films6To/radarr", "HD - 720p/1080p - English")
         except arrapi.exceptions.Exists:
